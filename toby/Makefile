@@ -4,3 +4,5 @@ run:
 debug:
 	gcc -g ./src/main.c
 	gdb -tui a.out
+test:
+	./bin/toby ./sandbox/webshell.php
