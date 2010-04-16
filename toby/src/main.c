@@ -140,6 +140,21 @@ int main(int argc, char *argv[]) {
             exit(0);
         }
 
+        /* get md5sum of file */
+        sprintf(command, "md5sum %s | awk \'{print $1}\' | tr -d \'\\n\'", argv[1]);
+        run_cmd(command, &buf);
+        strcpy(check_params[2], buf);
+        /*end get md5sum of file*/
+        /*check 2 - check md5sum*/
+        if (check_in(check_params[2], p_to_md5sums) == 1) {
+            cve_range = cve_range + 100;
+            printf("==> check 2: FAIL! (md5sum in malware's db)\n");
+        } else {
+            printf("==> check 2: Ok! (md5sum not in malware's db\n");
+        }
+        /*end of check2 - check md5sum*/
+		
+		
      
         printf("result: %s (range: %d)\n", check_result(cve_range), cve_range);
 
