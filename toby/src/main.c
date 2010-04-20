@@ -155,7 +155,33 @@ int main(int argc, char *argv[]) {
         /*end of check2 - check md5sum*/
 		
 		
-     
+      /*get md5sum of half file*/
+        /*ToDo use shell command for get md5sum for half file - cut, wc -l, etc*/
+        /*end get md5sum of half file*/
+
+        /*check 3 md5sum of half file in md5sum db*/
+
+        sprintf(command, "num=$(wc -l %s | awk \'{print $1}\'); tail -$((num/2)) %s | tr -d \"\t\" | tr -d \"[:space:]\" | tr -d \"[:blank:]\" | md5sum | awk \'{print $1}\'", argv[1], argv[1]);
+        run_cmd(command, &buf);
+       
+        strcpy(check_params[3], buf);
+        printf("\nhalf md5sum: %s \n", check_params[3]);
+        if (check_in(check_params[3], p_to_md5sums) == 1) {
+            cve_range = cve_range + 100;
+            printf("==> check 3: FAIL! (half md5sum in malware's db)\n");
+        } else {
+            printf("==> check 3: Ok! (half md5sum not in malware's db\n");
+        }
+        
+        if(optim_check(cve_range)==0){
+            printf("result: %s (range: %d)\n", check_result(cve_range), cve_range);
+            printf("\n\n############################################################\n\n");
+            exit(0);
+        }
+
+        /*end of check 3*/
+		
+		
         printf("result: %s (range: %d)\n", check_result(cve_range), cve_range);
 
     } else if (argc > 2) {
